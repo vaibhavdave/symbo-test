@@ -3,6 +3,7 @@ package com.symbo.assignment.repository;
 
 import com.symbo.assignment.model.bo.AccountBO;
 import com.symbo.assignment.model.bo.CounterBO;
+import com.symbo.assignment.repository.api.IAccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.FindAndModifyOptions;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -17,7 +18,7 @@ import java.time.LocalTime;
 import java.util.Optional;
 
 @Repository
-public class AccountRepository  {
+public class AccountRepository implements IAccountRepository {
 
     public static final String ACCOUNT_NUMBER_SEQUENCE = "account_number_sequence";
     public static final String COUNTER_KEY = "key";
@@ -45,6 +46,7 @@ public class AccountRepository  {
 
     }
 
+    @Override
     public AccountBO createAccount(AccountBO accountBO){
 
         Query query = new Query();
@@ -62,6 +64,7 @@ public class AccountRepository  {
         return accountBO;
     }
 
+    @Override
     public Optional<AccountBO> findByAccountNumber(String accountNumber) {
 
         AccountBO accountBO = mongoTemplate.findById(accountNumber,AccountBO.class);
@@ -72,6 +75,7 @@ public class AccountRepository  {
     }
 
 
+    @Override
     public void updateAccount(AccountBO accountBO) {
         mongoTemplate.save(accountBO);
     }

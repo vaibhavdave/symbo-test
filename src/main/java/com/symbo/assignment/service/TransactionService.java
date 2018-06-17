@@ -13,22 +13,24 @@ import com.symbo.assignment.model.response.AccountEnquiryResponse;
 import com.symbo.assignment.model.response.CreateAccountResponse;
 import com.symbo.assignment.model.response.DepositMoneyResponse;
 import com.symbo.assignment.model.response.WithdrawMoneyResponse;
-import com.symbo.assignment.repository.AccountRepository;
+import com.symbo.assignment.repository.api.IAccountRepository;
 import com.symbo.assignment.repository.TransactionRepository;
+import com.symbo.assignment.service.api.ITransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
-public class TransactionService {
+public class TransactionService implements ITransactionService {
 
     @Autowired
-    AccountRepository accountRepository;
+    IAccountRepository IAccountRepository;
 
     @Autowired
     TransactionRepository transactionRepository;
 
+    @Override
     public CreateAccountResponse getAccountNumber(AccountDTO accountdto) throws InvalidInputException {
 
         AccountBO accountBO = new AccountBO();
@@ -37,21 +39,22 @@ public class TransactionService {
         accountBO.setEmail(accountdto.getEmail());
         accountBO.setBalance(accountdto.getBalance());
 
-        accountBO = accountRepository.createAccount(accountBO);
+        accountBO = IAccountRepository.createAccount(accountBO);
         CreateAccountResponse response = new CreateAccountResponse();
         response.setAccountNumber(accountBO.getAccountNumber());
         return response;
     }
 
+    @Override
     public DepositMoneyResponse depositMoney(DepositDTO depositDTO) throws AccountNotFoundException {
-        Optional<AccountBO> accountBO = accountRepository.findByAccountNumber(depositDTO.getAccountNumber());
+        Optional<AccountBO> accountBO = IAccountRepository.findByAccountNumber(depositDTO.getAccountNumber());
 
         if(!accountBO.isPresent()){
             throw new AccountNotFoundException("Account number not found :" + depositDTO.getAccountNumber());
         }
 
         accountBO.get().setBalance(accountBO.get().getBalance() + depositDTO.getMoneyToDeposit());
-        accountRepository.updateAccount(accountBO.get());
+        IAccountRepository.updateAccount(accountBO.get());
 
         TransactionBO transactionBO = new TransactionBO();
         transactionBO.setAccountNumber(depositDTO.getAccountNumber());
@@ -68,8 +71,9 @@ public class TransactionService {
 
     }
 
+    @Override
     public WithdrawMoneyResponse withdrawMoney(WithdrawalDTO withdrawalDTO) throws AccountNotFoundException, InsufficientBalanceException {
-        Optional<AccountBO> accountBO = accountRepository.findByAccountNumber(withdrawalDTO.getAccountNumber());
+        Optional<AccountBO> accountBO = IAccountRepository.findByAccountNumber(withdrawalDTO.getAccountNumber());
 
         if(!accountBO.isPresent()){
             throw new AccountNotFoundException("Account number not found :" + withdrawalDTO.getAccountNumber());
@@ -79,7 +83,7 @@ public class TransactionService {
             throw new InsufficientBalanceException("Insufficient balance :" + accountBO.get().getBalance());
         }
         accountBO.get().setBalance(accountBO.get().getBalance() - withdrawalDTO.getMoneyToWithdraw());
-        accountRepository.updateAccount(accountBO.get());
+        IAccountRepository.updateAccount(accountBO.get());
 
         TransactionBO transactionBO = new TransactionBO();
         transactionBO.setAccountNumber(withdrawalDTO.getAccountNumber());
@@ -96,8 +100,9 @@ public class TransactionService {
 
     }
 
+    @Override
     public AccountEnquiryResponse getAccountDetails(String accountNumber) throws AccountNotFoundException {
-        Optional<AccountBO> accountBO = accountRepository.findByAccountNumber(accountNumber);
+        Optional<AccountBO> accountBO = IAccountRepository.findByAccountNumber(accountNumber);
         if(!accountBO.isPresent()){
             throw new AccountNotFoundException("Account number not found :" + accountNumber);
         }

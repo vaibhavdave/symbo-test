@@ -13,8 +13,8 @@ import com.symbo.assignment.model.response.WithdrawMoneyResponse;
 import com.symbo.assignment.model.vo.AccountVO;
 import com.symbo.assignment.model.vo.DepositVO;
 import com.symbo.assignment.model.vo.WithdrawalVO;
-import com.symbo.assignment.service.TransactionService;
 import com.symbo.assignment.service.VOtoDTOConverter;
+import com.symbo.assignment.service.api.ITransactionService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -38,7 +38,7 @@ public class TransactionController {
     VOtoDTOConverter valueObjectToDtoConverter;
 
     @Autowired
-    TransactionService transactionService;
+    ITransactionService transactionService;
 
     @ApiOperation(value = "ping service",response = String.class, nickname = "Ping")
     @ApiResponses(value = {
