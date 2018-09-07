@@ -1,5 +1,5 @@
 # Symbo-Assignment
-Test assignment for Symbo Insurance
+Test assignment for Symbo Insurance test
 
 
 ## pre-requisites
