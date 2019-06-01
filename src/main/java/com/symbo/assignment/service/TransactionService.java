@@ -9,6 +9,7 @@ import com.symbo.assignment.model.dto.AccountDTO;
 import com.symbo.assignment.model.dto.DepositDTO;
 import com.symbo.assignment.model.dto.WithdrawalDTO;
 import com.symbo.assignment.model.enums.TransactionType;
+import com.symbo.assignment.model.exchange.AccountOpenedEvent;
 import com.symbo.assignment.model.response.AccountEnquiryResponse;
 import com.symbo.assignment.model.response.CreateAccountResponse;
 import com.symbo.assignment.model.response.DepositMoneyResponse;
@@ -18,6 +19,7 @@ import com.symbo.assignment.repository.TransactionRepository;
 import com.symbo.assignment.service.api.ITransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -30,6 +32,10 @@ public class TransactionService implements ITransactionService {
     @Autowired
     TransactionRepository transactionRepository;
 
+    @Autowired
+    EventDispatcher eventDispatcher;
+
+    @Transactional
     @Override
     public CreateAccountResponse getAccountNumber(AccountDTO accountdto) throws InvalidInputException {
 
@@ -42,6 +48,8 @@ public class TransactionService implements ITransactionService {
         accountBO = IAccountRepository.createAccount(accountBO);
         CreateAccountResponse response = new CreateAccountResponse();
         response.setAccountNumber(accountBO.getAccountNumber());
+
+        eventDispatcher.send(new AccountOpenedEvent(accountBO.getAccountNumber()));
         return response;
     }
 

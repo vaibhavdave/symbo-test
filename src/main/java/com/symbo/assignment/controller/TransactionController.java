@@ -73,7 +73,7 @@ public class TransactionController {
 
         } catch (Exception e){
             response = new CreateAccountResponse();
-            response.getErrors().add("Error while processing request for account creation");
+            response.getErrors().add("Error while processing request for account creation." +e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
 
         }
