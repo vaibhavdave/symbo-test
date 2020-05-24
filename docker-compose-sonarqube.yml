@@ -1,0 +1,19 @@
+version: '2.0'
+services:
+  sonarqube-server:
+    container_name: sonarqube-server
+    image: sonarqube
+    ports:
+    - "9000:9000"
+    volumes:
+    - sonarqube_data:/opt/sonarqube/data
+    - sonarqube_extensions:/opt/sonarqube/extensions"
+    - sonarqube_logs:/opt/sonarqube/logs
+volumes:
+  sonarqube_data:
+    external: true
+  sonarqube_extensions:
+    external: true
+  sonarqube_logs:
+    external: true
+  

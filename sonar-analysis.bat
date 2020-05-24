@@ -1,0 +1,1 @@
+mvn sonar:sonar -Dsonar.projectKey=springboot-banking-app -Dsonar.host.url=http://192.168.99.100:9000 -Dsonar.login=6b19e67e14d156650cb7b03f5cc1008d2132bfd4  -Dsonar.java.binaries=target/**
