@@ -49,7 +49,7 @@ public class TransactionService implements ITransactionService {
         CreateAccountResponse response = new CreateAccountResponse();
         response.setAccountNumber(accountBO.getAccountNumber());
 
-        eventDispatcher.send(new AccountOpenedEvent(accountBO.getAccountNumber()));
+        //eventDispatcher.send(new AccountOpenedEvent(accountBO.getAccountNumber()));
         return response;
     }
 
