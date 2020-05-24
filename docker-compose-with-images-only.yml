@@ -1,0 +1,21 @@
+version: '2.0'
+services:
+  springboot-web-app:
+    container_name: springboot-web-app
+    image: vaibhavdave10990/springboot-apps:2.0
+    ports:
+    - "9090:9090"
+    volumes:
+    - mongodbvol:/data/db
+    environment:
+      MONGO_URL: mongodb://mongodb:27017/symbo
+    links:
+    - mongodb
+    depends_on:
+    - mongodb
+  mongodb:
+    container_name: mongodb
+    image: mongo
+volumes:
+  mongodbvol:
+    external: true
